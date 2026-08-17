@@ -26,6 +26,18 @@ This folder is ready to deploy as-is to any static host:
 
 No build command. Output directory is `/` (the repo root).
 
+## Hosted files (not part of the site)
+
+Some files live in this repo only so they have a stable public URL — they are not linked from
+any page, and no visitor will encounter them by browsing the site.
+
+| File | Public URL | Purpose |
+| --- | --- | --- |
+| `assets/medly-signature-logo.png` | `https://www.gnrg360.com/assets/medly-signature-logo.png` | Medly logo, used as an email-signature image |
+
+These are unlisted, **not private**: anyone with the URL can open it, and the file is also
+visible in this public GitHub repo. `_headers` marks them `noindex` so search engines skip them.
+
 ## Known limitations (carried over from Carrd)
 
 1. **Contact form**: the original form relied on Carrd's backend, which is no longer connected.

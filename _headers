@@ -1,0 +1,8 @@
+# Cloudflare Pages custom headers.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Unlisted file, hosted for use as an email-signature image.
+# Not linked from anywhere on the site; noindex keeps it out of search engines.
+/assets/medly-signature-logo.png
+  X-Robots-Tag: noindex, noimageindex, nofollow
+  Cache-Control: public, max-age=604800
