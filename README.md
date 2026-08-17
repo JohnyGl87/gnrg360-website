@@ -34,6 +34,7 @@ any page, and no visitor will encounter them by browsing the site.
 | File | Public URL | Purpose |
 | --- | --- | --- |
 | `assets/medly-signature-logo.png` | `https://www.gnrg360.com/assets/medly-signature-logo.png` | Medly logo, used as an email-signature image |
+| `assets/nrg-signature-logo.png` | `https://www.gnrg360.com/assets/nrg-signature-logo.png` | G-NRG 360 logo, used as an email-signature image (300×300, solid white background) |
 
 These are unlisted, **not private**: anyone with the URL can open it, and the file is also
 visible in this public GitHub repo. `_headers` marks them `noindex` so search engines skip them.
