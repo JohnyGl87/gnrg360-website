@@ -138,31 +138,31 @@
               <div class="tou-field">
                 <label for="tou-peak">צריכה חודשית בשעות פסגה <span class="tou-unit">(קוט״ש)</span></label>
                 <input id="tou-peak" name="peak" type="number" inputmode="decimal" min="0" step="any" dir="ltr" autocomplete="off" aria-required="true" aria-describedby="tou-peak-err" value="20000">
-                <p id="tou-peak-err" class="tou-error" hidden></p>
+                <p id="tou-peak-err" class="tou-error" role="alert" hidden></p>
               </div>
               <div class="tou-field">
                 <label for="tou-off">צריכה חודשית בשעות שפל <span class="tou-unit">(קוט״ש)</span></label>
                 <input id="tou-off" name="off" type="number" inputmode="decimal" min="0" step="any" dir="ltr" autocomplete="off" aria-required="true" aria-describedby="tou-off-err" value="60000">
-                <p id="tou-off-err" class="tou-error" hidden></p>
+                <p id="tou-off-err" class="tou-error" role="alert" hidden></p>
               </div>
               <div class="tou-field">
                 <label for="tou-peakPrice">מחיר לקוט״ש בפסגה <span class="tou-unit">(<span data-tou-unit>אגורות</span>)</span></label>
                 <input id="tou-peakPrice" name="peakPrice" type="number" inputmode="decimal" min="0" step="any" dir="ltr" autocomplete="off" aria-required="true" aria-describedby="tou-peakPrice-err" value="100">
-                <p id="tou-peakPrice-err" class="tou-error" hidden></p>
+                <p id="tou-peakPrice-err" class="tou-error" role="alert" hidden></p>
               </div>
               <div class="tou-field">
                 <label for="tou-offPrice">מחיר לקוט״ש בשפל <span class="tou-unit">(<span data-tou-unit>אגורות</span>)</span></label>
                 <input id="tou-offPrice" name="offPrice" type="number" inputmode="decimal" min="0" step="any" dir="ltr" autocomplete="off" aria-required="true" aria-describedby="tou-offPrice-err" value="50">
-                <p id="tou-offPrice-err" class="tou-error" hidden></p>
+                <p id="tou-offPrice-err" class="tou-error" role="alert" hidden></p>
               </div>
               <div class="tou-field wide">
                 <label for="tou-shift">כמה קוט״ש בחודש אפשר להסיט מהפסגה לשפל <span class="tou-unit">(קוט״ש)</span></label>
                 <input id="tou-shift" name="shift" type="number" inputmode="decimal" min="0" step="any" dir="ltr" autocomplete="off" aria-describedby="tou-shift-hint tou-shift-err" value="5000">
                 <p id="tou-shift-hint" class="tou-hint">לא יותר מהצריכה בשעות פסגה. שדה ריק נחשב 0.</p>
-                <p id="tou-shift-err" class="tou-error" hidden></p>
+                <p id="tou-shift-err" class="tou-error" role="alert" hidden></p>
               </div>
             </div>
-            <p class="tou-hint">את המחירים לוקחים מהחשבון או מהטבלה הרשמית (ראו “איך קוראים את המחירים שלכם”). מחשבים עונה אחת בכל פעם.</p>
+            <p class="tou-hint">את המחירים לוקחים מהחשבון או מלוח 5.2-1 בספר התעריפים של רשות החשמל (ראו “איך קוראים את המחירים שלכם”). מחשבים עונה אחת בכל פעם.</p>
             <div class="tou-actions">
               <button type="button" id="tou-reset" class="btn btn-quiet">החזרת ערכי הדוגמה</button>
               <button type="button" id="tou-clear" class="btn btn-quiet">ניקוי השדות</button>
@@ -171,9 +171,9 @@
 
           <div class="lens-lab tou-result" id="tou-result">
             <div class="lab-header"><h3>התוצאה</h3><span class="demo-label" id="tou-demo-label">ערכי דוגמה</span></div>
-            <p id="tou-message" class="tou-message" hidden></p>
+            <p id="tou-message" class="tou-message" role="status" hidden></p>
             <div id="tou-output">
-              <p class="lab-intro">אותה צריכה כוללת בשני המצבים. רק חלק ממנה עובר משעות הפסגה לשעות השפל.</p>
+              <p class="lab-intro">בחישוב מניחים שסך הצריכה זהה בשני המצבים. רק חלק ממנה עובר משעות הפסגה לשעות השפל.</p>
               <div class="lab-rates"><span><i class="key key-low" aria-hidden="true"></i><bdi id="tou-key-off"></bdi></span><span><i class="key key-high" aria-hidden="true"></i><bdi id="tou-key-peak"></bdi></span></div>
               <div class="comparison" role="group" aria-label="השוואה בין צריכה ועלות לפני ואחרי הסטה">
                 <div class="comparison-row"><div class="bar-header"><b>לפני</b><span><bdi id="tou-b-off">0</bdi> שפל + <bdi id="tou-b-peak">0</bdi> פסגה = <bdi id="tou-b-total">0</bdi> קוט״ש</span><strong class="price"><bdi id="tou-b-cost">0</bdi></strong></div><div class="energy-bar" aria-hidden="true"><span id="tou-b-off-bar" class="segment low" style="--share:75%"><span id="tou-b-off-label">0</span></span><span id="tou-b-peak-bar" class="segment high" style="--share:25%"><span id="tou-b-peak-label">0</span></span></div></div>
@@ -206,9 +206,9 @@
           <p>תעו״ז הוא תעריף עומס וזמן. מחיר הקוט״ש תלוי במועד הצריכה, כי ייצור חשמל בשעות של ביקוש גבוה עולה יותר.</p>
           <p>לפי ספר התעריפים של רשות החשמל, תעריפי תעו״ז חלים על:</p>
           <ul class="tick-list"><li>צרכני חברת החשמל במתח עליון ובמתח גבוה.</li><li>צרכנים במתח נמוך המחוברים בחיבור של 3×200 אמפר ומעלה.</li><li>צרכנים במתח נמוך שצרכו בשנה הקלנדרית האחרונה יותר מ־40,000 קוט״ש.</li><li>צרכנים שבוחרים בתעו״ז מרצונם.</li></ul>
-          <p>שאר הצרכנים משלמים תעריף אחיד, שהוא ממוצע משוקלל של תעריפי התעו״ז.</p>
-          <p>לקוח בתעריף אחיד, בית או עסק, יכול לבקש מחברת החשמל לעבור לתעו״ז ברירתי. נדרש מונה מתאים, והמעבר הוא לתקופת מינימום של שנה.</p>
-          <p>אם החשמל שלכם מסופק על ידי ספק פרטי, המחירים נקבעים בהסכם איתו. לפי רשות החשמל, אותו קוט״ש נמכר היום במחירים שונים בהתאם לזהות הספק.</p>
+          <p>ככלל, שאר צרכני חברת החשמל משלמים תעריף אחיד, שהוא ממוצע משוקלל של תעריפי התעו״ז.</p>
+          <p>לקוח של חברת החשמל בתעריף אחיד (ביתי או כללי) יכול לבקש לעבור לתעו״ז ברירתי. חברת החשמל מתקינה מונה מתאים, והמעבר הוא לתקופת מינימום של שנה.</p>
+          <p>אם החשמל שלכם מסופק על ידי ספק פרטי, המחיר קבוע בהסכם איתו. לפי רשות החשמל, המחירים שהספקים גובים אינם נקבעים על ידי הרשות, והספקים רשאים להציע הסדרים שונים ביחס לתעריף.</p>
         </div>
       </div>
     </section>
@@ -232,7 +232,7 @@
           <p>לצורך התעו״ז, חברת החשמל מגדירה את החגים הבאים כשבתות, ואת ערבי החג כימי שישי: ראש השנה, יום הכיפורים, ראשון של סוכות, שמחת תורה, ראשון ושביעי של פסח, יום העצמאות וחג השבועות.</p>
           <h3 class="svc-sub">מה השתנה ב־2025 וב־2026</h3>
           <p>בטבלת השעות לא נמצא שינוי. עם זאת, בדצמבר 2025 עדכנה רשות החשמל את מבנה התעריף:</p>
-          <ul class="tick-list"><li>התעריפים מתעדכנים אוטומטית פעמיים בשנה, ב־1 בינואר וב־1 ביולי.</li><li>ברכיב הרשת אוחדו קבוצות השעות, ותעריפי התעו״ז ברכיב זה בוטלו.</li><li>ברכיב הייצור נשמר היחס בין קבוצות השעות כפי שנקבע בהחלטה 63609.</li><li>הרשות כתבה שתקיים דיון בעדכון תעריפי הייצור והמערכת במהלך 2027.</li></ul>
+          <ul class="tick-list"><li>תעריפי חברת החשמל מתעדכנים בדרך כלל פעמיים בשנה, ב־1 בינואר וב־1 ביולי. במצבים מיוחדים ההחלטה מאפשרת עדכון גם במועד אחר.</li><li>ברכיב הרשת אוחדו קבוצות השעות, ותעריפי התעו״ז ברכיב זה בוטלו.</li><li>ברכיב הייצור היחס בין קבוצות השעות נשאר בתחילה כפי שנקבע בהחלטה 63609, אבל הוא יכול להשתנות מעט בגלל ההצמדות.</li><li>בהחלטה נקבע שהרשות תדון במהלך 2026 בעדכון תעריפי הייצור והמערכתי. בשימוע מאוקטובר 2026, שעדיין פתוח להערות, הציעה הרשות לקיים את הדיון במהלך 2027.</li></ul>
           <p>לכן כדאי לבדוק את הטבלה ואת המחירים מחדש אחרי כל עדכון.</p>
         </div>
       </div>
@@ -242,7 +242,7 @@
       <div class="shell faq-layout">
         <div><h2 id="s4-title">איך קוראים את המחירים שלכם</h2></div>
         <div class="svc-body">
-          <ol class="step-list"><li><b>מזהים את רמת המתח ואת סוג התעריף.</b> אם יש לכם ספק פרטי, בודקים בהסכם איתו.</li><li><b>מחפשים את המחיר לקוט״ש בכל קבוצת שעות.</b> הטבלה הרשמית היא לוח 5.2-1 בספר התעריפים של רשות החשמל. מחירים באגורות לקוט״ש, לפי עונה, קבוצת שעות ורמת מתח. למתח נמוך יש גם דף באתר חברת החשמל.</li><li><b>בוחרים עונה אחת.</b> המחירים משתנים לפי עונה, ולכן מחשבים כל עונה בנפרד.</li><li><b>מזינים את הצריכה בכל קבוצה.</b> אם החשבון אינו מפרט צריכה לפי פסגה ושפל, כדאי לבקש את הפירוט מספק החשמל.</li></ol>
+          <ol class="step-list"><li><b>מזהים את רמת המתח ואת סוג התעריף.</b> אם יש לכם ספק פרטי, בודקים בהסכם איתו.</li><li><b>מחפשים את המחיר לקוט״ש בכל קבוצת שעות.</b> המחירים של חברת החשמל מרוכזים בלוח 5.2-1 בספר התעריפים של רשות החשמל: באגורות לקוט״ש, לפי עונה, קבוצת שעות, רמת מתח וסוג תעריף. למתח נמוך יש גם דף באתר חברת החשמל.</li><li><b>בוחרים עונה אחת.</b> המחירים משתנים לפי עונה, ולכן מחשבים כל עונה בנפרד.</li><li><b>מזינים את הצריכה בכל קבוצה.</b> אם החשבון אינו מפרט צריכה לפי פסגה ושפל, כדאי לבקש את הפירוט מספק החשמל.</li></ol>
           <p>הטבלה כוללת גם רכיב קיבולת, שנמדד ב־₪ ל־KVA לשנה ולא לפי קוט״ש. רכיב זה אינו במחשבון.</p>
         </div>
       </div>
@@ -252,7 +252,7 @@
       <div class="shell faq-layout">
         <div><h2 id="s5-title">למה הסטה משנה: אותה אנרגיה, מחיר אחר</h2></div>
         <div class="svc-body">
-          <p>כשמעבירים קוט״ש מהפסגה לשפל, סך הצריכה נשאר זהה. ההפרש בעלות הוא ההפרש בין שני המחירים, כפול הכמות שהוסטה.</p>
+          <p>בחישוב הזה מניחים שסך הצריכה נשאר זהה. בפועל, אגירה של קור או של אוויר דחוס יכולה להוסיף צריכה. ההפרש בעלות הוא ההפרש בין שני המחירים, כפול הכמות שהוסטה.</p>
           <p>הפער בין הפסגה לשפל שונה בין העונות ובין רמות המתח. לכן אותה הסטה שווה סכום שונה בעונות שונות. אם מחיר הפסגה אינו גבוה ממחיר השפל, ההסטה אינה משתלמת בחישוב הזה.</p>
         </div>
       </div>
@@ -286,10 +286,10 @@
       <div class="shell faq-layout">
         <div><h2 id="faq-title">שאלות נפוצות</h2></div>
         <div class="faq">
-          <details class="faq-item" open><summary>האם המחשבון כולל תעריפים?</summary><p>לא. אין בו מחירים מובנים. את המחירים מזינים מהחשבון או מהטבלה הרשמית. ערכי הדוגמה שמופיעים בטעינת הדף נועדו להדגמה בלבד.</p></details>
+          <details class="faq-item" open><summary>האם המחשבון כולל תעריפים?</summary><p>לא. אין בו מחירים מובנים. את המחירים מזינים מהחשבון או מלוח 5.2-1 בספר התעריפים של רשות החשמל. ערכי הדוגמה שמופיעים בטעינת הדף נועדו להדגמה בלבד.</p></details>
           <details class="faq-item"><summary>מה ההבדל בין פסגה לשפל?</summary><p>פסגה היא קבוצת השעות היקרה, ושפל היא קבוצת השעות הזולה. השעות תלויות בעונה וביום בשבוע, כמו בטבלה למעלה.</p></details>
-          <details class="faq-item"><summary>האם שעות הפסגה השתנו ב־2026?</summary><p>נכון ל־24 בנובמבר 2026 לא נמצא שינוי בטבלת השעות בספר התעריפים של יולי 2026. המחירים מתעדכנים פעמיים בשנה.</p></details>
-          <details class="faq-item"><summary>האם גם בית פרטי יכול לחשב?</summary><p>כן, אם הוא בתעו״ז. בית בתעריף אחיד יכול לבקש לעבור לתעו״ז ברירתי.</p></details>
+          <details class="faq-item"><summary>האם שעות הפסגה השתנו ב־2026?</summary><p>נכון ל־24 בנובמבר 2026 לא נמצא שינוי בטבלת השעות בספר התעריפים של יולי 2026. תעריפי חברת החשמל מתעדכנים בדרך כלל פעמיים בשנה, ב־1 בינואר וב־1 ביולי. במצבים מיוחדים ההחלטה מאפשרת עדכון גם במועד אחר.</p></details>
+          <details class="faq-item"><summary>האם גם בית פרטי יכול לחשב?</summary><p>כן, אם הוא בתעו״ז. לקוח של חברת החשמל בתעריף אחיד (ביתי או כללי) יכול לבקש לעבור לתעו״ז ברירתי.</p></details>
           <details class="faq-item"><summary>איך מזינים צריכה שמשתנה בין עונות?</summary><p>מחשבים כל עונה בנפרד, עם המחירים והצריכה של אותה עונה.</p></details>
           <details class="faq-item"><summary>האם התוצאה היא חיסכון שאקבל?</summary><p>לא. התוצאה היא חישוב לפי הנתונים שהזנתם. היא אינה כוללת רכיבים אחרים בחשבון, ואינה בודקת אם ההסטה אפשרית בפועל.</p></details>
         </div>
@@ -310,13 +310,14 @@
             <ul>
               <li><a href="https://www.gov.il/BlobFolder/generalpage/tarriffbook/he/sefer_tariff_07_2026.pdf">רשות החשמל: ספר לוחות התעריפים, יולי 2026 (לוחות 5.1-1 ו־5.2-1)</a></li>
               <li><a href="https://www.gov.il/BlobFolder/policy/63609/he/Files_Hachlatot_63609.pdf">רשות החשמל: החלטה 63609 מיום 27.7.2022, עדכון מקבצי שעות ביקוש</a></li>
-              <li><a href="https://www.gov.il/BlobFolder/policy/78206/he/Files_Hachlatot_78206.pdf">רשות החשמל: החלטה 72806 מיום 8.12.2025, עדכון מבנה תעריף החשמל</a></li>
+              <li><a href="https://www.gov.il/BlobFolder/generalpage/maagar_ezer_72806_74010/he/Files_Hachlatot_72806_74010_72806_upd_12052026.pdf">רשות החשמל: החלטה 72806 מיום 8.12.2025, עדכון מבנה תעריף החשמל (נוסח מאוחד)</a></li>
+              <li><a href="https://www.gov.il/BlobFolder/generalpage/madrich_mahavr_mesapkim/he/Files_Tzarchanut_madrich_mahavar_mesapkim_09_2025.pdf">רשות החשמל: מדריך מעבר צרכנים בין מספקים (ספטמבר 2025)</a></li>
               <li><a href="https://www.gov.il/BlobFolder/rfp/shim_hefreshim_11_2026/he/Files_Shimuah_shim_malle_n.pdf">רשות החשמל: שימוע מיום 18.10.2026, בחינת ההפרשים ברצועה לשנת 2025</a></li>
               <li><a href="https://www.iec.co.il/content/tariffs/contentpages/taozb-namuch">חברת החשמל: מחירי התעו״ז במתח נמוך</a></li>
               <li><a href="https://www.iec.co.il/content/tariffs/contentpages/taozb-private/">חברת החשמל: תעו״ז ברירתי</a></li>
               <li><a href="https://ieccontent.iec.co.il/media/4fcblbpl/taoz.pdf">חברת החשמל: הודעה ללקוחות על שינוי חישוב החשבון במונה תעו״ז (2023)</a></li>
             </ul>
-            <p class="small-note">המידע נכון ל־24 בנובמבר 2026 ואינו ייעוץ משפטי. מחירי התעו״ז אינם מופיעים בדף זה: הם משתנים פעמיים בשנה ותלויים ברמת המתח ובספק.</p>
+            <p class="small-note">המידע נכון ל־24 בנובמבר 2026 ואינו ייעוץ משפטי. מחירי התעו״ז של חברת החשמל מתעדכנים בדרך כלל ב־1 בינואר וב־1 ביולי ותלויים ברמת המתח. אצל ספק פרטי המחיר נקבע בהסכם.</p>
           </section></div></section>
 
     <section class="section related" aria-labelledby="related-title">

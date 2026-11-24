@@ -14,6 +14,7 @@
   // every price comes from the visitor. Costs before/after moving `shift` kWh/month from peak to off-peak.
   // Prices are entered in agorot per kWh or in shekels per kWh (`unit`). Only the per-kWh energy price is modelled.
   const TOU_FIELDS = ['peak', 'off', 'peakPrice', 'offPrice', 'shift'];
+  const TOU_MAX_KWH = 1e9, TOU_MAX_PRICE_NIS = 1e4; // sanity caps: keeps results free of precision noise
   function calculateTou(input) {
     const src = input || {};
     const errors = {}, num = {};
@@ -23,6 +24,8 @@
       const value = typeof raw === 'number' ? raw : Number(String(raw).trim());
       if (!Number.isFinite(value)) { errors[key] = 'invalid'; num[key] = 0; return; }
       if (value < 0) { errors[key] = 'negative'; num[key] = 0; return; }
+      const unitScale = src.unit === 'nis' ? 1 : 0.01;
+      if (key.endsWith('Price') ? value * unitScale > TOU_MAX_PRICE_NIS : value > TOU_MAX_KWH) { errors[key] = 'tooBig'; num[key] = 0; return; }
       num[key] = value;
     });
     if (!errors.shift && !errors.peak && num.shift > num.peak) errors.shift = 'exceeds';
@@ -41,9 +44,9 @@
   const content = {
     he: {
       tou: {
-        example: 'ערכי דוגמה, הזינו את הנתונים מהחשבון שלכם.', mine: 'התוצאה מחושבת מהנתונים שהזנתם.',
+        example: 'ערכי דוגמה, הזינו את הנתונים מהחשבון שלכם.', partial: 'חלק מהערכים הם ערכי דוגמה.', demoChip: 'ערכי דוגמה', partialChip: 'חלק מהערכים הם ערכי דוגמה', mine: 'התוצאה מחושבת מהנתונים שהזנתם.',
         agorot: 'אגורות', nis: '₪', perKwh: 'לקוט״ש',
-        errors: {empty: 'יש למלא ערך.', invalid: 'יש להזין מספר.', negative: 'אין להזין מספר שלילי.', exceeds: 'ההסטה לא יכולה לעלות על הצריכה בשעות פסגה.'},
+        errors: {empty: 'יש למלא ערך.', invalid: 'יש להזין מספר.', negative: 'אין להזין מספר שלילי.', tooBig: 'הערך גבוה מדי.', exceeds: 'ההסטה לא יכולה לעלות על הצריכה בשעות פסגה.'},
         incomplete: 'יש למלא את כל השדות ולתקן את השגיאות המסומנות כדי לראות תוצאה.',
         lower: 'מחיר הפסגה אינו גבוה ממחיר השפל, ולכן ההסטה אינה חוסכת בנתונים אלה.',
         same: 'ההסטה היא 0 קוט״ש, לכן אין הפרש.',
@@ -177,7 +180,8 @@
     const currentUnit = () => (unitInputs.find(input => input.checked) || {}).value === 'nis' ? 'nis' : 'agorot';
     const setBdi = (key, text) => { const el = id(key); if (el) el.textContent = text; };
     const read = () => ({peak: fields.peak.value, off: fields.off.value, peakPrice: fields.peakPrice.value, offPrice: fields.offPrice.value, shift: fields.shift.value, unit: currentUnit()});
-    let example = true;
+    const edited = new Set(); // fields the visitor has changed; example labels stay until all five are changed
+    const announce = text => { const live = id('tou-live'); if (!live) return; live.textContent = ''; setTimeout(() => { live.textContent = text; }, 60); };
     function setUnitLabels() {
       const label = currentUnit() === 'nis' ? t.nis : t.agorot;
       app.querySelectorAll('[data-tou-unit]').forEach(el => { el.textContent = label; });
@@ -202,16 +206,17 @@
       if (highBar) highBar.style.setProperty('--share', total > 0 ? `${100 * peak / total}%` : '0%');
       setBdi(`${prefix}-off-label`, number.format(off)); setBdi(`${prefix}-peak-label`, number.format(peak));
     }
-    function update(announce) {
+    function update(speak) {
+      const announceMsg = text => { if (speak) announce(text); };
       const result = calculateTou(read());
       showErrors(result);
       const note = id('tou-example-note'), message = id('tou-message'), box = id('tou-output');
-      if (note) note.textContent = example ? t.example : t.mine;
-      const demo = id('tou-demo-label'); if (demo) demo.hidden = !example;
+      const untouched = edited.size === 0, allEdited = edited.size >= TOU_FIELDS.length;
+      if (note) note.textContent = untouched ? t.example : allEdited ? t.mine : t.partial;
+      const demo = id('tou-demo-label'); if (demo) { demo.hidden = allEdited; demo.textContent = untouched ? t.demoChip : t.partialChip; }
       if (!result.ok) {
         if (box) box.hidden = true;
         if (message) { message.textContent = t.incomplete; message.hidden = false; }
-        if (announce) set('tou-live', t.incomplete);
         return;
       }
       if (box) box.hidden = false;
@@ -226,7 +231,7 @@
       setBdi('tou-b-cost', shekel(result.before)); setBdi('tou-a-cost', shekel(result.after));
       bars('tou-b', result.peak, result.off, result.total); bars('tou-a', result.peakAfter, result.offAfter, result.total);
       setBdi('tou-month', shekel(result.month)); setBdi('tou-year', shekel(result.year));
-      if (announce) set('tou-live', t.live(shekel(result.month), shekel(result.year)));
+      announceMsg(t.live(shekel(result.month), shekel(result.year)));
     }
     function markTouched() { TOU_FIELDS.forEach(key => { fields[key].dataset.touched = '1'; }); }
     function setValues(values) {
@@ -235,7 +240,7 @@
       setUnitLabels();
     }
     TOU_FIELDS.forEach(key => {
-      fields[key].addEventListener('input', () => { example = false; update(false); });
+      fields[key].addEventListener('input', () => { edited.add(key); update(false); });
       fields[key].addEventListener('blur', () => { fields[key].dataset.touched = '1'; update(false); });
       fields[key].addEventListener('change', () => update(true));
     });
@@ -256,10 +261,10 @@
     const clear = id('tou-clear'), reset = id('tou-reset');
     if (clear) clear.addEventListener('click', () => {
       setValues({peak: '', off: '', peakPrice: '', offPrice: '', shift: '', unit: currentUnit()}); lastUnit = currentUnit();
-      example = false; update(false); set('tou-live', t.cleared); fields.peak.focus();
+      TOU_FIELDS.forEach(key => edited.add(key)); update(false); announce(t.cleared); fields.peak.focus();
     });
     if (reset) reset.addEventListener('click', () => {
-      setValues(defaults); lastUnit = 'agorot'; example = true; update(false); set('tou-live', t.restored);
+      setValues(defaults); lastUnit = 'agorot'; edited.clear(); update(false); announce(t.restored);
     });
     setValues(defaults); update(false);
     app.hidden = false;
