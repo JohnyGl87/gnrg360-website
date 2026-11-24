@@ -247,3 +247,4 @@ html[dir=ltr] .hero .hero-slogan{font-size:clamp(40px,4.8vw,51px);line-height:1.
 html[dir=ltr] .hero .hero-slogan{font-size:clamp(38px,7.5vw,54px)}}
 @media(max-width:340px){.hero .hero-slogan{font-size:40px}
 html[dir=ltr] .hero .hero-slogan{font-size:37px}}
+@media(max-width:360px){.hero .hero-story h1.hero-kicker{text-wrap:balance}}
