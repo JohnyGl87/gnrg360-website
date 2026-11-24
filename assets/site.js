@@ -253,6 +253,27 @@
     });
   }
 
+  // Header menus are plain <details> (they work without JS). This only closes an open
+  // menu on a click outside it, on Escape, when focus leaves it, or after choosing a link.
+  function initNav() {
+    const menus = Array.from(document.querySelectorAll('.nav-menu'));
+    if (!menus.length) return;
+    const close = (menu, refocus) => {
+      if (!menu.open) return;
+      menu.open = false;
+      const summary = menu.querySelector('summary');
+      if (refocus && summary) summary.focus();
+    };
+    menus.forEach(menu => {
+      menu.addEventListener('toggle', () => { if (menu.open) menus.forEach(other => { if (other !== menu) close(other, false); }); });
+      menu.addEventListener('focusout', event => { if (event.relatedTarget && !menu.contains(event.relatedTarget)) close(menu, false); });
+      menu.querySelectorAll('a').forEach(link => link.addEventListener('click', () => close(menu, false)));
+    });
+    document.addEventListener('click', event => menus.forEach(menu => { if (!menu.contains(event.target)) close(menu, false); }));
+    document.addEventListener('keydown', event => { if (event.key === 'Escape') menus.forEach(menu => { if (menu.open) close(menu, menu.contains(document.activeElement)); }); });
+  }
+
+  setup('navigation', initNav);
   setup('energy illustration', initLens);
   setup('questionnaire', initCheck);
   setup('contact form', initContact);

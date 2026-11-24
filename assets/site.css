@@ -247,3 +247,47 @@ html[dir=ltr] .hero .hero-slogan{font-size:clamp(40px,4.8vw,51px);line-height:1.
 html[dir=ltr] .hero .hero-slogan{font-size:clamp(38px,7.5vw,54px)}}
 @media(max-width:340px){.hero .hero-slogan{font-size:40px}
 html[dir=ltr] .hero .hero-slogan{font-size:37px}}
+@media(max-width:360px){.hero .hero-story h1.hero-kicker{text-wrap:balance}}
+
+/* V3.5 MOCKUP (Gate 2, not yet approved) — multi-page navigation: services menu, knowledge, about, contact.
+   One <nav> for all widths; on ≤900px it becomes the second header row, like the former mobile links. */
+.header{position:relative;z-index:30}
+.site-nav{display:flex;align-items:center;color:#e0ecea;font-weight:600;font-size:16px;min-width:0}
+.site-nav ul{margin:0;padding:0;list-style:none}
+.site-nav-list{display:flex;align-items:center;gap:0 25px}
+.site-nav-list>li{display:flex}
+.site-nav-list>li>a,.nav-menu>summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;white-space:nowrap}
+.site-nav-list>li>a:hover,.nav-menu>summary:hover,.site-nav-list>li>a[aria-current=page],.nav-menu>summary.is-current{color:var(--cyan);text-decoration:underline;text-underline-offset:5px}
+.nav-menu>summary{list-style:none}
+.nav-menu>summary::-webkit-details-marker{display:none}
+.nav-menu>summary:after{content:'';width:7px;height:7px;flex:none;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(-2px) rotate(45deg);transition:transform .18s ease}
+.nav-menu[open]>summary{color:var(--cyan)}
+.nav-menu[open]>summary:after{transform:translateY(2px) rotate(-135deg)}
+.nav-panel{background:var(--paper);color:var(--ink);border-top:4px solid var(--coral);box-shadow:0 22px 44px #08191f55;padding:22px 26px 20px;display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:4px 34px;font-weight:400}
+.nav-panel :focus-visible{outline-color:#167784;outline-offset:2px}
+.nav-col{min-width:0}
+.nav-group{font-size:13px;font-weight:800;color:#385c62;margin:0 0 4px;padding-bottom:7px;border-bottom:1px solid #c2cbc8;max-width:none}
+.nav-col ul+.nav-group{margin-top:14px}
+.nav-panel li a{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:7px 10px;margin-inline:-10px;border-radius:3px;font-size:17px;font-weight:800;line-height:1.25;color:var(--ink)}
+.nav-panel li a>*{align-self:flex-start}
+.nav-panel li a small{font-size:14px;font-weight:600;color:#48616a;line-height:1.35;margin-top:2px}
+.nav-panel li a:hover{background:#e4eeeb;color:#145f69}
+.nav-panel li a[aria-current=page]{background:#d9ebea;box-shadow:inset -4px 0 #317780}
+html[dir=ltr] .nav-panel li a[aria-current=page]{box-shadow:inset 4px 0 #317780}
+.nav-all{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;font-weight:700;font-size:15px;color:#1d6972;text-decoration:underline;text-underline-offset:4px}
+.nav-all:hover{color:var(--ink)}
+@media(min-width:901px){.nav-menu{position:relative}
+.nav-panel{position:absolute;top:calc(100% + 16px);inset-inline-start:-26px;width:min(620px,calc(100vw - 40px))}}
+@media(max-width:1050px) and (min-width:901px){.site-nav-list{gap:0 16px}
+.site-nav{font-size:15px}}
+@media(max-width:900px){.site-nav{order:2;flex-basis:100%;border-top:1px solid #56727b;padding-top:3px;font-size:15px}
+.site-nav-list{width:100%;gap:0 22px}
+.nav-panel{position:absolute;inset-inline:0;top:100%;grid-template-columns:repeat(2,minmax(0,1fr));padding:16px clamp(20px,4.7vw,58px) 18px;max-height:calc(100vh - 130px);overflow:auto;overscroll-behavior:contain}}
+@media(max-width:640px){.nav-panel{grid-template-columns:minmax(0,1fr);gap:0}
+.nav-col+.nav-col{margin-top:14px}}
+@media(max-width:580px){.site-nav{font-size:14.5px}
+.site-nav-list{justify-content:space-between;gap:0 8px}
+.nav-panel{padding-inline:19px}
+.nav-panel li a{font-size:16px}}
+@media(max-width:360px){.site-nav{font-size:13.5px}
+.nav-panel{padding-inline:14px}}

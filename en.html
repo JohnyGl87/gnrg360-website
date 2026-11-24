@@ -27,8 +27,8 @@
   <link rel="icon" type="image/png" sizes="96x96" href="/assets/icons/favicon-96.png">
   <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="preload" href="/assets/v2-assets/assistant-variable.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="/assets/site.css?v=3.4">
-  <script src="/assets/site.js?v=3.4" defer></script>
+  <link rel="stylesheet" href="/assets/site.css?v=3.5">
+  <script src="/assets/site.js?v=3.5" defer></script>
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -103,13 +103,25 @@
   <header class="header" id="top">
     <div class="shell header-inner">
       <a class="brand" href="#main"><img src="/assets/logo-header.png" width="46" height="46" alt=""><span><b translate="no">G-NRG 360</b><small>Engineering, energy &amp; management</small></span></a>
-      <nav aria-label="Main navigation" class="navigation navigation-desktop">
-        <a href="#services">Services</a><a href="#expertise">Expertise</a><a href="#lens">Energy tool</a><a href="#case">Case method</a><a href="#about">About</a>
+      <nav aria-label="Main navigation" class="site-nav">
+        <ul class="site-nav-list">
+          <li><details class="nav-menu"><summary>Services</summary><div class="nav-panel">
+            <div class="nav-col"><p class="nav-group">Industry, business &amp; authorities</p><ul>
+              <li><a href="/en/energy-manager">Outsourced energy manager<small>Ongoing support, annual report, efficiency tests</small></a></li>
+              <li><a href="/en/energy-survey">Energy survey<small>To the Ministry of Energy specification</small></a></li>
+              <li><a href="/en/iso-50001">ISO 50001<small>Energy management system implementation</small></a></li>
+            </ul></div>
+            <div class="nav-col"><p class="nav-group">More services</p><ul>
+              <li><a href="#natural-gas">Natural gas &amp; infrastructure<small>Engineering support and gas safety</small></a></li>
+              <li><a href="#home">Home energy assessment<small>When the bill is high and unclear</small></a></li>
+              <li><a href="#training">Lectures &amp; training<small>Energy and natural gas</small></a></li>
+            </ul><a class="nav-all" href="#services">All services</a></div>
+          </div></details></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
       </nav>
       <div class="header-tools"><a class="language-switch" href="/" lang="he" dir="rtl" hreflang="he" aria-label="Switch to Hebrew">עברית</a><a class="btn header-action" href="#contact">Let's talk</a></div>
-      <nav aria-label="Main navigation" class="navigation navigation-mobile">
-        <a href="#services">Services</a><a href="#expertise">Expertise</a><a href="#lens">Energy tool</a><a href="#case">Case method</a><a href="#about">About</a>
-      </nav>
     </div>
   </header>
   <main id="main" tabindex="-1">
