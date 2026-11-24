@@ -17,7 +17,8 @@ Source of [www.gnrg360.com](https://www.gnrg360.com): a hand-written static site
 └── assets/
     ├── site.css, site.js   Shared styles and script
     ├── logo.png            Full logo
-    ├── og-image.png        Social-sharing image, 1200×630 (og:image)
+    ├── og-image.png        Social-sharing image, Hebrew, 1200×630 (og:image)
+    ├── og-image-en.png     Social-sharing image, English, 1200×630
     ├── logo-header.png     Small header logo
     ├── icons/              Favicon / app icons
     ├── evgeni.jpg          Portrait
