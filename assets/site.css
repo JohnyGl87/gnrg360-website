@@ -539,3 +539,48 @@ html[dir=ltr] .breadcrumb li+li:before{content:'\203A'}
 .svc-body p{font-size:17px}}
 .expertise-item p .more-link{display:flex;align-items:center;min-height:44px;margin-top:2px;font-weight:700;color:#1d6972;text-decoration:underline;text-underline-offset:4px}
 .expertise-item p .more-link:hover{color:var(--ink)}
+/* V3.8 — TOU calculator (/tou-calculator). Reuses .lens-lab, .comparison, .energy-bar, .segment, .lab-result, .method. */
+.tou-head{max-width:66ch;margin-bottom:22px}
+.tou-head h2{font-size:clamp(28px,3.2vw,40px);line-height:1.15;margin-bottom:10px}
+.tou-note{font-size:17px;line-height:1.6;color:#2a444c;margin:0}
+.tou-note b{color:#7a3a1f}
+.tou-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(22px,4vw,48px);align-items:start}
+.tou-grid[hidden]{display:none}
+.tou-card{background:#fff;border-top:5px solid #457b80;padding:clamp(18px,3vw,32px);min-width:0}
+.tou-card h3{font-size:25px;margin:0 0 14px}
+.tou-card :focus-visible{outline:3px solid #167784;outline-offset:3px}
+.tou-units{border:0;padding:0;margin:0 0 16px;display:flex;flex-wrap:wrap;gap:6px 18px;min-width:0}
+.tou-units legend{font-weight:700;font-size:16px;padding:0;margin-bottom:4px;width:100%}
+.tou-radio{display:inline-flex;align-items:center;gap:8px;min-height:44px;font-size:16px;cursor:pointer}
+.tou-radio input{width:20px;height:20px;accent-color:#266e78;margin:0;flex:none}
+.tou-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.tou-field{min-width:0}
+.tou-field.wide{grid-column:1/-1}
+.tou-field label{display:block;font-size:16px;font-weight:700;line-height:1.3;margin-bottom:6px}
+.tou-unit{font-weight:600;color:#48616a;white-space:nowrap}
+.tou-field input{width:100%;max-width:100%;border:1px solid #587879;color:var(--ink);background:#f9fbfa;border-radius:2px;padding:11px 12px;min-height:46px;font:inherit;font-size:17px;line-height:1.45;text-align:right}
+.tou-field input[aria-invalid=true]{border:2px solid #a8412b;background:#fff7f4}
+.tou-hint{font-size:14px;line-height:1.5;color:#48616a;margin:6px 0 0}
+.tou-error{font-size:14px;line-height:1.4;font-weight:700;color:#8e2f1a;margin:6px 0 0}
+.tou-error[hidden],.tou-message[hidden]{display:none}
+.tou-card>.tou-hint{margin-top:14px}
+.tou-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.tou-actions .btn{min-height:46px;font-size:16px}
+.tou-message{border-inline-start:4px solid #c0663f;background:#fbeee7;color:#5f2d18;padding:10px 12px;font-size:15px;line-height:1.5;margin:0 0 14px}
+.tou-result{min-width:0}
+.tou-result .lab-header h3{margin-bottom:8px}
+.tou-result .lab-result strong{font-size:clamp(26px,6.5vw,38px);white-space:normal;overflow-wrap:anywhere;text-align:end}
+.tou-result .lab-result+.lab-result{margin-top:0}
+.tou-result .bar-header>span{overflow-wrap:anywhere}
+.tou-method{margin-top:18px;font-size:15px}
+.tou-method ul{margin:3px 0 8px;padding-inline-start:20px}
+.tou-method li{margin-bottom:4px}
+.tou-table th[scope=row]{background:#eef3f0;font-weight:800;color:#234f56}
+.tou-table .is-peak{background:#fbe6db;color:#5f2d18;font-weight:700}
+.tou-table .is-off{background:#e4f1ec;color:#25525a}
+.svc-sub{font-size:clamp(21px,2.2vw,25px);margin:26px 0 8px}
+@media(max-width:900px){.tou-grid{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:580px){.tou-fields{grid-template-columns:minmax(0,1fr)}.tou-actions .btn{width:100%}.tou-note{font-size:16px}.tou-result .lab-result{grid-template-columns:minmax(0,1fr);row-gap:4px}.tou-result .lab-result strong{grid-row:auto;grid-column:1;text-align:start;order:2}.tou-result .lab-result span:first-child{order:1}.tou-result .lab-result span:last-child{order:3;margin-top:0}}
+.tou-time{display:inline-block;white-space:nowrap}
+.tou-months{display:block;font-weight:400;font-size:13px;line-height:1.35;color:#48616a;margin-top:3px}
+@media(max-width:580px){.tou-table{font-size:13px}.tou-table th,.tou-table td{padding:8px 5px}.tou-table th[scope=row]{width:25%}.tou-months{font-size:12px}}

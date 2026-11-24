@@ -1,4 +1,4 @@
-/* G-NRG 360 — bilingual energy illustration, questionnaire and explicit contact form. */
+/* G-NRG 360 — bilingual energy illustration, TOU calculator, questionnaire and explicit contact form. */
 (function () {
   'use strict';
   const BASE_LOW = 32, BASE_HIGH = 16, LOW_CENTS = 60, HIGH_CENTS = 120, MAX_SHIFT = 10;
@@ -10,8 +10,48 @@
     const after = low * LOW_CENTS + high * HIGH_CENTS;
     return {shift, low, high, total: low + high, before, after, saving: before - after};
   }
+  // TOU calculator (page /tou-calculator). Pure function, no tariff numbers inside:
+  // every price comes from the visitor. Costs before/after moving `shift` kWh/month from peak to off-peak.
+  // Prices are entered in agorot per kWh or in shekels per kWh (`unit`). Only the per-kWh energy price is modelled.
+  const TOU_FIELDS = ['peak', 'off', 'peakPrice', 'offPrice', 'shift'];
+  function calculateTou(input) {
+    const src = input || {};
+    const errors = {}, num = {};
+    TOU_FIELDS.forEach(key => {
+      const raw = src[key];
+      if (raw === '' || raw === null || raw === undefined || (typeof raw === 'string' && raw.trim() === '')) { if (key !== 'shift') errors[key] = 'empty'; num[key] = 0; return; }
+      const value = typeof raw === 'number' ? raw : Number(String(raw).trim());
+      if (!Number.isFinite(value)) { errors[key] = 'invalid'; num[key] = 0; return; }
+      if (value < 0) { errors[key] = 'negative'; num[key] = 0; return; }
+      num[key] = value;
+    });
+    if (!errors.shift && !errors.peak && num.shift > num.peak) errors.shift = 'exceeds';
+    const ok = Object.keys(errors).length === 0;
+    const out = {ok, errors, shiftEmpty: src.shift === '' || src.shift === null || src.shift === undefined};
+    if (!ok) return out;
+    const scale = src.unit === 'nis' ? 1 : 0.01; // price in shekels per kWh
+    const peakPrice = num.peakPrice * scale, offPrice = num.offPrice * scale;
+    const round = value => Math.round(value * 1e6) / 1e6;
+    const before = round(num.peak * peakPrice + num.off * offPrice);
+    const peakAfter = num.peak - num.shift, offAfter = num.off + num.shift;
+    const after = round(peakAfter * peakPrice + offAfter * offPrice);
+    const month = round(before - after);
+    return Object.assign(out, {peak: num.peak, off: num.off, shift: num.shift, peakPrice, offPrice, peakAfter, offAfter, total: num.peak + num.off, before, after, month, year: round(month * 12)});
+  }
   const content = {
     he: {
+      tou: {
+        example: 'ערכי דוגמה, הזינו את הנתונים מהחשבון שלכם.', mine: 'התוצאה מחושבת מהנתונים שהזנתם.',
+        agorot: 'אגורות', nis: '₪', perKwh: 'לקוט״ש',
+        errors: {empty: 'יש למלא ערך.', invalid: 'יש להזין מספר.', negative: 'אין להזין מספר שלילי.', exceeds: 'ההסטה לא יכולה לעלות על הצריכה בשעות פסגה.'},
+        incomplete: 'יש למלא את כל השדות ולתקן את השגיאות המסומנות כדי לראות תוצאה.',
+        lower: 'מחיר הפסגה אינו גבוה ממחיר השפל, ולכן ההסטה אינה חוסכת בנתונים אלה.',
+        same: 'ההסטה היא 0 קוט״ש, לכן אין הפרש.',
+        monthLabel: 'הפרש חודשי', yearLabel: 'הפרש שנתי', yearNote: 'כפול 12: המשך של אותו דפוס חודשי.', monthNote: 'באותה כמות חשמל.',
+        before: 'לפני', after: 'אחרי', peakWord: 'פסגה', offWord: 'שפל',
+        live: (month, year) => `הפרש חודשי ${month}. הפרש שנתי ${year}.`,
+        cleared: 'השדות נוקו.', restored: 'ערכי הדוגמה הוחזרו.'
+      },
       questions: {
         route: {title: 'באיזה סוג נכס מדובר?', options: {industry: 'מפעל / עסק / רשות מקומית / תשתיות', home: 'בית או נכס פרטי'}},
         concern: {title: 'מה בעיקר מטריד אתכם?', options: {cost: 'הוצאות אנרגיה גבוהות', unusual: 'צריכה חריגה או לא ברורה', upgrade: 'שדרוג או שיפוץ מתוכנן', overview: 'רוצים תמונת מצב מסודרת'}},
@@ -80,7 +120,7 @@
     } catch (_) { /* Keep the full body available for manual copying. */ }
     return {subject: messages.subject, body, uri};
   }
-  const api = {calculateShift, getQuestion, createSummary, isProductionHost, createContactDraft};
+  const api = {calculateShift, calculateTou, getQuestion, createSummary, isProductionHost, createContactDraft};
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   const lang = normalizeLang(document.documentElement.lang), words = content[lang];
   const questions = words.questions;
@@ -120,6 +160,111 @@
     controls.hidden = false;
     slider.addEventListener('input', () => updateLens(false));
     slider.addEventListener('change', () => updateLens(true));
+  }
+
+  // TOU calculator: everything happens in the browser; nothing is sent or stored.
+  // The visual reuses the #lens comparison components (.comparison, .energy-bar, .segment, .lab-result).
+  function initTou() {
+    const app = id('tou-app'), form = id('tou-form');
+    if (!app || !form || !words.tou) return;
+    const t = words.tou, fields = {};
+    for (const key of TOU_FIELDS) { fields[key] = id(`tou-${key}`); if (!fields[key]) return; }
+    const unitInputs = Array.from(form.querySelectorAll('input[name="tou-unit"]'));
+    if (unitInputs.length !== 2) return;
+    const defaults = {peak: '20000', off: '60000', peakPrice: '100', offPrice: '50', shift: '5000', unit: 'agorot'};
+    const money = new Intl.NumberFormat(locale, {minimumFractionDigits: 0, maximumFractionDigits: 2});
+    const shekel = value => `${money.format(value)} ₪`;
+    const currentUnit = () => (unitInputs.find(input => input.checked) || {}).value === 'nis' ? 'nis' : 'agorot';
+    const setBdi = (key, text) => { const el = id(key); if (el) el.textContent = text; };
+    const read = () => ({peak: fields.peak.value, off: fields.off.value, peakPrice: fields.peakPrice.value, offPrice: fields.offPrice.value, shift: fields.shift.value, unit: currentUnit()});
+    let example = true;
+    function setUnitLabels() {
+      const label = currentUnit() === 'nis' ? t.nis : t.agorot;
+      app.querySelectorAll('[data-tou-unit]').forEach(el => { el.textContent = label; });
+    }
+    function showErrors(result) {
+      for (const key of TOU_FIELDS) {
+        const message = id(`tou-${key}-err`), field = fields[key];
+        const code = result.errors[key];
+        // A field that is merely empty is flagged only after the visitor has touched it or tried to read a result.
+        if (code && (code !== 'empty' || field.dataset.touched === '1')) {
+          field.setAttribute('aria-invalid', 'true');
+          if (message) { message.textContent = t.errors[code]; message.hidden = false; }
+        } else {
+          field.removeAttribute('aria-invalid');
+          if (message) { message.textContent = ''; message.hidden = true; }
+        }
+      }
+    }
+    function bars(prefix, peak, off, total) {
+      const lowBar = id(`${prefix}-off-bar`), highBar = id(`${prefix}-peak-bar`);
+      if (lowBar) lowBar.style.setProperty('--share', total > 0 ? `${100 * off / total}%` : '0%');
+      if (highBar) highBar.style.setProperty('--share', total > 0 ? `${100 * peak / total}%` : '0%');
+      setBdi(`${prefix}-off-label`, number.format(off)); setBdi(`${prefix}-peak-label`, number.format(peak));
+    }
+    function update(announce) {
+      const result = calculateTou(read());
+      showErrors(result);
+      const note = id('tou-example-note'), message = id('tou-message'), box = id('tou-output');
+      if (note) note.textContent = example ? t.example : t.mine;
+      const demo = id('tou-demo-label'); if (demo) demo.hidden = !example;
+      if (!result.ok) {
+        if (box) box.hidden = true;
+        if (message) { message.textContent = t.incomplete; message.hidden = false; }
+        if (announce) set('tou-live', t.incomplete);
+        return;
+      }
+      if (box) box.hidden = false;
+      if (message) {
+        const text = result.shift === 0 ? t.same : result.peakPrice <= result.offPrice ? t.lower : '';
+        message.textContent = text; message.hidden = !text;
+      }
+      set('tou-key-peak', `${t.peakWord}: ${shekel(result.peakPrice)} ${t.perKwh}`); set('tou-key-off', `${t.offWord}: ${shekel(result.offPrice)} ${t.perKwh}`);
+      setBdi('tou-b-peak', number.format(result.peak)); setBdi('tou-b-off', number.format(result.off));
+      setBdi('tou-a-peak', number.format(result.peakAfter)); setBdi('tou-a-off', number.format(result.offAfter));
+      setBdi('tou-b-total', number.format(result.total)); setBdi('tou-a-total', number.format(result.total));
+      setBdi('tou-b-cost', shekel(result.before)); setBdi('tou-a-cost', shekel(result.after));
+      bars('tou-b', result.peak, result.off, result.total); bars('tou-a', result.peakAfter, result.offAfter, result.total);
+      setBdi('tou-month', shekel(result.month)); setBdi('tou-year', shekel(result.year));
+      if (announce) set('tou-live', t.live(shekel(result.month), shekel(result.year)));
+    }
+    function markTouched() { TOU_FIELDS.forEach(key => { fields[key].dataset.touched = '1'; }); }
+    function setValues(values) {
+      TOU_FIELDS.forEach(key => { fields[key].value = values[key]; delete fields[key].dataset.touched; });
+      unitInputs.forEach(input => { input.checked = input.value === values.unit; });
+      setUnitLabels();
+    }
+    TOU_FIELDS.forEach(key => {
+      fields[key].addEventListener('input', () => { example = false; update(false); });
+      fields[key].addEventListener('blur', () => { fields[key].dataset.touched = '1'; update(false); });
+      fields[key].addEventListener('change', () => update(true));
+    });
+    let lastUnit = currentUnit();
+    unitInputs.forEach(input => input.addEventListener('change', () => {
+      // Keep the same price when the unit changes: 100 agorot becomes 1 ₪ and the other way round.
+      const next = currentUnit();
+      if (next !== lastUnit) {
+        ['peakPrice', 'offPrice'].forEach(key => {
+          const value = Number(fields[key].value);
+          if (fields[key].value.trim() !== '' && Number.isFinite(value)) fields[key].value = String(Math.round((next === 'nis' ? value / 100 : value * 100) * 1e6) / 1e6);
+        });
+        lastUnit = next;
+      }
+      setUnitLabels(); update(true);
+    }));
+    form.addEventListener('submit', event => { event.preventDefault(); markTouched(); update(true); });
+    const clear = id('tou-clear'), reset = id('tou-reset');
+    if (clear) clear.addEventListener('click', () => {
+      setValues({peak: '', off: '', peakPrice: '', offPrice: '', shift: '', unit: currentUnit()}); lastUnit = currentUnit();
+      example = false; update(false); set('tou-live', t.cleared); fields.peak.focus();
+    });
+    if (reset) reset.addEventListener('click', () => {
+      setValues(defaults); lastUnit = 'agorot'; example = true; update(false); set('tou-live', t.restored);
+    });
+    setValues(defaults); update(false);
+    app.hidden = false;
+    const fallback = id('tou-fallback');
+    if (fallback) fallback.hidden = true;
   }
 
   // The questionnaire never transmits or stores answers. Copying is a deliberate action.
@@ -275,6 +420,7 @@
 
   setup('navigation', initNav);
   setup('energy illustration', initLens);
+  setup('TOU calculator', initTou);
   setup('questionnaire', initCheck);
   setup('contact form', initContact);
 })();
