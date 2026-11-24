@@ -1,12 +1,35 @@
 # Cloudflare Pages custom headers.
 # Docs: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# NOTE: Cloudflare merges EVERY rule that matches a URL, and joins repeated header
+# names with a comma. Rules below that override /assets/* therefore first detach
+# Cache-Control ("! Cache-Control") so each file ends up with exactly one value.
+
+# Default for everything under /assets/ (CSS, JS, images).
+/assets/*
+  Cache-Control: public, max-age=86400
+
+# Font: never changes under the same name, cache for a year.
+/assets/v2-assets/assistant-variable.ttf
+  ! Cache-Control
+  Cache-Control: public, max-age=31536000, immutable
 
 # Unlisted files, hosted only so they have a stable public URL (email-signature images).
 # Not linked from anywhere on the site; noindex keeps them out of search engines.
 /assets/medly-signature-logo.png
+  ! Cache-Control
   X-Robots-Tag: noindex, noimageindex, nofollow
   Cache-Control: public, max-age=604800
 
 /assets/nrg-signature-logo.png
+  ! Cache-Control
   X-Robots-Tag: noindex, noimageindex, nofollow
   Cache-Control: public, max-age=604800
+
+# Keep the *.pages.dev preview/production-alias hostnames out of search engines.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+# Repo documentation is not site content.
+/README.md
+  X-Robots-Tag: noindex
