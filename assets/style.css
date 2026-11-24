@@ -270,6 +270,10 @@ section { padding-block: clamp(64px, 9vw, 120px); position: relative; scroll-mar
 .client:hover { transform: translateY(-4px); box-shadow: var(--shadow); border-color: var(--cyan-light); }
 .client img { max-height: 74px; max-width: 92%; width: auto; object-fit: contain; transition: transform .25s; }
 .client:hover img { transform: scale(1.05); }
+/* Mgroup's supplied white wordmark needs its own high-contrast logo surface. */
+.client--mgroup .client-logo { width: 100%; max-width: 166px; min-height: 64px; display: grid; place-items: center; background: #243740; border-radius: 8px; padding: 10px; }
+.client--mgroup .client-logo img { width: 100%; max-width: 100%; height: auto; object-fit: contain; }
+.client--mgroup:focus-visible { outline: 3px solid var(--cyan-deep); outline-offset: 3px; }
 
 /* --------------------------------------------------------------- contact */
 .contact-grid { display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: start; }
