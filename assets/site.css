@@ -228,3 +228,22 @@ html[dir=ltr] .summary-actions .btn,html[dir=ltr] .contact-actions .btn{overflow
   html[dir=ltr] .hero-links .btn{min-width:0;width:100%;height:100%;padding-inline:16px;text-align:start;justify-content:space-between}
   html[dir=ltr] .hero-links .btn span{flex:none}
 }
+
+/* V3.4 — SEO hero. The keyword H1 takes the place and look of the former eyebrow line;
+   the slogan keeps the former H1 look as a non-heading (rules mirror every .hero h1 rule above, in the same order). */
+.hero .hero-story h1.hero-kicker{font-size:16px;font-weight:700;line-height:1.4;letter-spacing:normal;margin:0 0 13px;max-width:66ch;text-wrap:wrap;color:var(--cyan)}
+@media(max-width:580px){.hero .hero-story h1.hero-kicker{font-size:15px;margin-bottom:10px}}
+.hero .hero-slogan{font-size:clamp(52px,6.8vw,89px);font-weight:800;line-height:.99;letter-spacing:-.046em;margin:0 0 26px;max-width:none;text-wrap:balance}
+@media(max-width:800px){.hero .hero-slogan{font-size:clamp(49px,10.4vw,71px);margin-bottom:20px}}
+@media(max-width:580px){.hero .hero-slogan{font-size:clamp(43px,10.7vw,58px);line-height:1.02}}
+@media(max-width:360px){.hero .hero-slogan{font-size:42px}}
+html[dir=ltr] .hero .hero-slogan{font-size:clamp(46px,5.35vw,77px);letter-spacing:-.045em}
+@media(max-width:580px){html[dir=ltr] .hero .hero-slogan{font-size:clamp(38px,10.7vw,52px);line-height:1.06}}
+@media(max-width:340px){html[dir=ltr] .hero .hero-slogan{font-size:37px}}
+@media(min-width:801px){html[dir=ltr] .hero .hero-slogan{font-size:clamp(46px,4.55vw,65px);line-height:1.06}}
+@media(max-width:1050px){.hero .hero-slogan{font-size:clamp(49px,5.8vw,61px);line-height:1.02;margin-bottom:20px}
+html[dir=ltr] .hero .hero-slogan{font-size:clamp(40px,4.8vw,51px);line-height:1.06}}
+@media(max-width:760px){.hero .hero-slogan{font-size:clamp(43px,8.7vw,64px);line-height:1.02}
+html[dir=ltr] .hero .hero-slogan{font-size:clamp(38px,7.5vw,54px)}}
+@media(max-width:340px){.hero .hero-slogan{font-size:40px}
+html[dir=ltr] .hero .hero-slogan{font-size:37px}}
