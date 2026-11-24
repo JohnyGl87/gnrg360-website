@@ -256,7 +256,7 @@ html[dir=ltr] .hero .hero-slogan{font-size:37px}}
 .site-nav ul{margin:0;padding:0;list-style:none}
 .site-nav-list{display:flex;align-items:center;gap:0 25px}
 .site-nav-list>li{display:flex}
-.site-nav-list>li>a,.nav-menu>summary{display:inline-flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;white-space:nowrap}
+.site-nav-list>li>a,.nav-menu>summary{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;min-width:44px;cursor:pointer;white-space:nowrap}
 .site-nav-list>li>a:hover,.nav-menu>summary:hover,.site-nav-list>li>a[aria-current=page],.nav-menu>summary.is-current{color:var(--cyan);text-decoration:underline;text-underline-offset:5px}
 .nav-menu>summary{list-style:none}
 .nav-menu>summary::-webkit-details-marker{display:none}
@@ -276,8 +276,8 @@ html[dir=ltr] .hero .hero-slogan{font-size:37px}}
 html[dir=ltr] .nav-panel li a[aria-current=page]{box-shadow:inset 4px 0 #317780}
 .nav-all{display:inline-flex;align-items:center;min-height:44px;margin-top:10px;font-weight:700;font-size:15px;color:#1d6972;text-decoration:underline;text-underline-offset:4px}
 .nav-all:hover{color:var(--ink)}
-@media(min-width:901px){.nav-menu{position:relative}
-.nav-panel{position:absolute;top:calc(100% + 16px);inset-inline-start:-26px;width:min(620px,calc(100vw - 40px))}}
+@media(min-width:901px){.header-inner{position:relative}
+.nav-panel{position:absolute;top:calc(100% + 1px);left:50%;right:auto;transform:translateX(-50%);width:min(680px,calc(100vw - 40px))}}
 @media(max-width:1050px) and (min-width:901px){.site-nav-list{gap:0 16px}
 .site-nav{font-size:15px}}
 @media(max-width:900px){.site-nav{order:2;flex-basis:100%;border-top:1px solid #56727b;padding-top:3px;font-size:15px}
@@ -409,12 +409,12 @@ html[dir=ltr] .breadcrumb li+li:before{content:'\203A'}
 .article-layout{display:grid;grid-template-columns:minmax(0,250px) minmax(0,1fr);gap:clamp(28px,5vw,72px);align-items:start}
 .toc{position:sticky;top:20px;border-top:3px solid #457b80;padding-top:14px;min-width:0}
 .toc-title{font-size:14px;font-weight:800;color:#385c62;margin:0 0 6px}
-.toc ol{margin:0;padding:0;list-style:none;counter-reset:toc}
-.toc li{counter-increment:toc;border-bottom:1px solid #d3dcd9}
-.toc a{display:flex;gap:9px;align-items:baseline;min-height:44px;padding-block:9px;font-size:15.5px;font-weight:600;line-height:1.35;color:#2a4a52}
-.toc a:before{content:counter(toc,decimal-leading-zero);color:#317680;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
-.toc a:hover{color:#145f69;text-decoration:underline;text-underline-offset:3px}
-.prose{min-width:0;max-width:720px}
+.toc ol,.toc-mobile ol{margin:0;padding:0;list-style:none;counter-reset:toc}
+.toc li,.toc-mobile li{counter-increment:toc;border-bottom:1px solid #d3dcd9}
+.toc a,.toc-mobile a{display:flex;gap:9px;align-items:baseline;min-height:44px;padding-block:9px;font-size:15.5px;font-weight:600;line-height:1.35;color:#2a4a52}
+.toc a:before,.toc-mobile a:before{content:counter(toc,decimal-leading-zero);color:#317680;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.toc a:hover,.toc-mobile a:hover{color:#145f69;text-decoration:underline;text-underline-offset:3px}
+.prose{min-width:0;max-width:66ch}
 .prose>h2{font-size:clamp(26px,2.8vw,34px);margin:44px 0 12px;scroll-margin-top:20px}
 .prose p,.prose li{font-size:18px;line-height:1.75;color:#2a444c}
 .prose p{margin:0 0 16px;max-width:none}
@@ -478,8 +478,8 @@ html[dir=ltr] .breadcrumb li+li:before{content:'\203A'}
 .article-card-soon .article-tag{background:#dfe5e1;color:#4a6168}
 @media(max-width:1050px){.article-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:900px){.article-layout{grid-template-columns:minmax(0,1fr);gap:24px}
-.toc{position:static;background:#eef3f0;border-top-width:3px;padding:12px 16px 4px}
-.toc li:last-child{border-bottom:0}
+.toc{display:none}
+.toc-mobile{display:block}
 .cta-band-inner{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:700px){.article-list{grid-template-columns:minmax(0,1fr);gap:12px}}
 @media(max-width:580px){.article-hero h1{font-size:clamp(29px,8vw,36px)}
@@ -496,3 +496,27 @@ html[dir=ltr] .breadcrumb li+li:before{content:'\203A'}
 .author-box img{width:64px;height:64px}
 .cta-band .contact-actions{flex-direction:column;align-items:stretch}
 .cta-band .contact-actions .btn{width:100%}}
+
+/* V3.5 MOCKUP — Gate 2 review round 1: skip link above the header, "coming soon" items, sample-text chips, mobile TOC. */
+.skip{z-index:40}
+.nav-soon{display:flex;flex-direction:column;justify-content:center;min-height:44px;padding:7px 10px;margin-inline:-10px;font-size:17px;font-weight:800;line-height:1.25;color:#4f666c}
+.nav-soon>*{align-self:flex-start}
+.nav-soon small{font-size:14px;font-weight:600;color:#5b7076;line-height:1.35;margin-top:2px}
+.soon-tag{display:inline-block;font-style:normal;font-size:12px;font-weight:800;line-height:1.4;color:#4a6168;background:#dfe5e1;border:1px solid #c2cbc8;padding:1px 7px;border-radius:2px;margin-top:5px}
+.related-card-soon{background:#eef1ee;border-top-color:#a9b8b7}
+.related-card-soon b{color:#4a6168}
+.related-card-soon:hover{background:#eef1ee;transform:none}
+.sample-chip{display:inline-block;background:#7c4936;color:#fff;font-size:12px!important;font-weight:700;line-height:1.4;padding:2px 8px;border-radius:2px;margin:0 0 10px;max-width:none}
+caption .sample-chip{margin:0 0 0 0;margin-inline-start:6px;vertical-align:1px}
+.toc-mobile{display:none;margin:18px 0 8px;background:#eef3f0;border-top:3px solid #457b80}
+.toc-mobile summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:48px;padding:10px 16px;cursor:pointer;list-style:none;font-weight:800;font-size:16px;color:#234f56}
+.toc-mobile summary::-webkit-details-marker{display:none}
+.toc-mobile summary:after{content:'+';font-size:24px;font-weight:400;line-height:1;color:#31747d}
+.toc-mobile[open] summary:after{content:'\2212'}
+.toc-mobile summary small{font-weight:600;color:#48616a;font-size:14px;margin-inline-start:auto}
+.toc-mobile ol{padding:0 16px 6px!important;margin:0!important}
+.toc-mobile li{margin:0;padding:0}
+.toc-mobile li:last-child{border-bottom:0}
+.toc-mobile a{font-size:15.5px!important}
+.prose .toc-mobile a{color:#2a4a52;font-weight:600;text-decoration:none}
+.why .credentials li b{display:block;font-size:18px;margin-bottom:2px}
