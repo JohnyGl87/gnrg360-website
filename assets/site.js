@@ -96,95 +96,109 @@
     if (txt !== undefined) element.textContent = txt;
     return element;
   }
-  const slider = id('shift');
-  function updateLens(announce) {
-    const r = calculateShift(slider.value);
-    set('after-low', number.format(r.low)); set('after-high', number.format(r.high));
-    set('after-low-label', number.format(r.low)); set('after-high-label', number.format(r.high));
-    set('after-price', displayMoney(r.after)); set('shift-output', `${number.format(r.shift)} ${words.unit}`); set('day-saving', displayMoney(r.saving));
-    id('after-low-bar').style.setProperty('--share', `${100 * r.low / r.total}%`);
-    id('after-high-bar').style.setProperty('--share', `${100 * r.high / r.total}%`);
-    slider.setAttribute('aria-valuetext', words.shifted(number.format(r.shift)));
-    if (announce) set('lens-live', words.lensLive(number.format(r.total), displayMoney(r.after), displayMoney(r.saving)));
+  // Each component is set up in isolation: a missing element or an error in one
+  // component must never stop the others from working.
+  function setup(name, init) {
+    try { init(); } catch (error) { if (window.console && console.warn) console.warn(`G-NRG 360: ${name} could not start.`, error); }
   }
-  if (slider && id('lens-controls')) {
+
+  function initLens() {
+    const slider = id('shift'), controls = id('lens-controls');
+    if (!slider || !controls) return;
+    const lowBar = id('after-low-bar'), highBar = id('after-high-bar');
+    function updateLens(announce) {
+      const r = calculateShift(slider.value);
+      set('after-low', number.format(r.low)); set('after-high', number.format(r.high));
+      set('after-low-label', number.format(r.low)); set('after-high-label', number.format(r.high));
+      set('after-price', displayMoney(r.after)); set('shift-output', `${number.format(r.shift)} ${words.unit}`); set('day-saving', displayMoney(r.saving));
+      if (lowBar) lowBar.style.setProperty('--share', `${100 * r.low / r.total}%`);
+      if (highBar) highBar.style.setProperty('--share', `${100 * r.high / r.total}%`);
+      slider.setAttribute('aria-valuetext', words.shifted(number.format(r.shift)));
+      if (announce) set('lens-live', words.lensLive(number.format(r.total), displayMoney(r.after), displayMoney(r.saving)));
+    }
     updateLens(false);
-    id('lens-controls').hidden = false;
+    controls.hidden = false;
     slider.addEventListener('input', () => updateLens(false));
     slider.addEventListener('change', () => updateLens(true));
   }
 
   // The questionnaire never transmits or stores answers. Copying is a deliberate action.
+  // Its "arrange a call" link goes to data-contact-href on #check-app or any ancestor (default #contact).
   function initCheck() {
-  const app = id('check-app');
-  if (!app) return;
-  let answers = [null, null, null], step = 0;
-  const nextButton = id('check-next'), prevButton = id('check-prev');
-  const content = id('check-content'), error = id('check-error');
-  prevButton.textContent = words.previous; error.textContent = words.choose;
-  function showQuestion(moveFocus) {
-    content.replaceChildren();
-    error.hidden = true; set('copy-status', '');
-    prevButton.hidden = step === 0;
-    const result = step === 3;
-    set('progress-text', result ? words.completed : words.questionProgress(number.format(step + 1)));
-    id('progress-bar').style.transform = `scaleX(${result ? 3 : step + 1})`;
-    nextButton.textContent = result ? words.restart : step === 2 ? words.showSummary : words.next;
-    if (result) {
-      const summary = createSummary(answers, lang);
-      if (!summary) { step = 0; answers = [null, null, null]; showQuestion(moveFocus); return; }
-      const wrapper = make('div', 'check-result');
-      const heading = make('h3', '', words.summaryHeading); heading.tabIndex = -1;
-      const box = make('div', 'check-summary');
-      const summaryText = make('p', '', summary.text); box.append(summaryText);
-      const advice = make('p', '', summary.next);
-      const context = make('p', 'small-note', words.summaryContext);
-      const copy = make('button', 'btn btn-dark copy-button', words.copy); copy.type = 'button';
-      copy.addEventListener('click', async () => {
-        try {
-          if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard unavailable');
-          await navigator.clipboard.writeText(summary.text);
-          set('copy-status', words.copied);
-        } catch (_) {
-          const selection = window.getSelection();
-          if (selection && document.createRange) { const range = document.createRange(); range.selectNodeContents(summaryText); selection.removeAllRanges(); selection.addRange(range); }
-          set('copy-status', words.copyFailed);
-        }
+    const app = id('check-app');
+    if (!app) return;
+    const nextButton = id('check-next'), prevButton = id('check-prev');
+    const content = id('check-content'), error = id('check-error');
+    if (!nextButton || !prevButton || !content || !error) return; // Keep the static fallback.
+    const contactHost = app.closest('[data-contact-href]');
+    const contactHref = (contactHost && contactHost.getAttribute('data-contact-href')) || '#contact';
+    let answers = [null, null, null], step = 0;
+    prevButton.textContent = words.previous; error.textContent = words.choose;
+    function showQuestion(moveFocus) {
+      content.replaceChildren();
+      error.hidden = true; set('copy-status', '');
+      prevButton.hidden = step === 0;
+      const result = step === 3;
+      set('progress-text', result ? words.completed : words.questionProgress(number.format(step + 1)));
+      const progressBar = id('progress-bar');
+      if (progressBar) progressBar.style.transform = `scaleX(${result ? 3 : step + 1})`;
+      nextButton.textContent = result ? words.restart : step === 2 ? words.showSummary : words.next;
+      if (result) {
+        const summary = createSummary(answers, lang);
+        if (!summary) { step = 0; answers = [null, null, null]; showQuestion(moveFocus); return; }
+        const wrapper = make('div', 'check-result');
+        const heading = make('h3', '', words.summaryHeading); heading.tabIndex = -1;
+        const box = make('div', 'check-summary');
+        const summaryText = make('p', '', summary.text); box.append(summaryText);
+        const advice = make('p', '', summary.next);
+        const context = make('p', 'small-note', words.summaryContext);
+        const copy = make('button', 'btn btn-dark copy-button', words.copy); copy.type = 'button';
+        copy.addEventListener('click', async () => {
+          try {
+            if (!navigator.clipboard || !window.isSecureContext) throw new Error('Clipboard unavailable');
+            await navigator.clipboard.writeText(summary.text);
+            set('copy-status', words.copied);
+          } catch (_) {
+            const selection = window.getSelection();
+            if (selection && document.createRange) { const range = document.createRange(); range.selectNodeContents(summaryText); selection.removeAllRanges(); selection.addRange(range); }
+            set('copy-status', words.copyFailed);
+          }
+        });
+        const contact = make('a', 'btn btn-quiet copy-button', words.contact); contact.href = contactHref;
+        const actions = make('div', 'summary-actions'); actions.append(copy, contact);
+        wrapper.append(heading, box, advice, actions, context); content.append(wrapper);
+        if (moveFocus) heading.focus();
+        return;
+      }
+      const q = getQuestion(step, answers, lang), fieldset = make('fieldset');
+      const legend = make('legend', '', q.title); legend.tabIndex = -1;
+      const options = make('div', 'check-options');
+      Object.entries(q.options).forEach(([key, name]) => {
+        const label = make('label', 'check-option');
+        const input = make('input'); input.type = 'radio'; input.name = `check-step-${step}`; input.value = key; input.checked = answers[step] === key;
+        input.addEventListener('change', () => {
+          if (step === 0 && answers[0] !== key) answers[2] = null;
+          answers[step] = key; error.hidden = true; fieldset.removeAttribute('aria-describedby');
+        });
+        label.append(input, make('span', '', name)); options.append(label);
       });
-      const contact = make('a', 'btn btn-quiet copy-button', words.contact); contact.href = '#contact';
-      const actions = make('div', 'summary-actions'); actions.append(copy, contact);
-      wrapper.append(heading, box, advice, actions, context); content.append(wrapper);
-      if (moveFocus) heading.focus();
-      return;
+      fieldset.append(legend, options); content.append(fieldset);
+      if (moveFocus) legend.focus();
     }
-    const q = getQuestion(step, answers, lang), fieldset = make('fieldset');
-    const legend = make('legend', '', q.title); legend.tabIndex = -1;
-    const options = make('div', 'check-options');
-    Object.entries(q.options).forEach(([key, name]) => {
-      const label = make('label', 'check-option');
-      const input = make('input'); input.type = 'radio'; input.name = `check-step-${step}`; input.value = key; input.checked = answers[step] === key;
-      input.addEventListener('change', () => {
-        if (step === 0 && answers[0] !== key) answers[2] = null;
-        answers[step] = key; error.hidden = true; fieldset.removeAttribute('aria-describedby');
-      });
-      label.append(input, make('span', '', name)); options.append(label);
+    nextButton.addEventListener('click', () => {
+      if (step === 3) {step = 0; answers = [null, null, null]; showQuestion(true); return;}
+      if (!answers[step]) {error.hidden = false; const group = content.querySelector('fieldset'); if (group) group.setAttribute('aria-describedby', 'check-error'); const first = content.querySelector('input'); if (first) first.focus(); return;}
+      step += 1; showQuestion(true);
     });
-    fieldset.append(legend, options); content.append(fieldset);
-    if (moveFocus) legend.focus();
+    prevButton.addEventListener('click', () => { if (step > 0) {step -= 1; showQuestion(true);} });
+    document.querySelectorAll('[data-check-route]').forEach(link => link.addEventListener('click', () => {
+      const target = link.dataset.checkRoute;
+      if (Object.hasOwn(questions.route.options, target)) {if (answers[0] !== target) answers[2] = null; answers[0] = target; step = 0; showQuestion(true);}
+    }));
+    showQuestion(false); app.hidden = false;
+    const fallback = id('check-fallback');
+    if (fallback) fallback.hidden = true;
   }
-  nextButton.addEventListener('click', () => {
-    if (step === 3) {step = 0; answers = [null, null, null]; showQuestion(true); return;}
-    if (!answers[step]) {error.hidden = false; const group = content.querySelector('fieldset'); if (group) group.setAttribute('aria-describedby', 'check-error'); const first = content.querySelector('input'); if (first) first.focus(); return;}
-    step += 1; showQuestion(true);
-  });
-  prevButton.addEventListener('click', () => { if (step > 0) {step -= 1; showQuestion(true);} });
-  document.querySelectorAll('[data-check-route]').forEach(link => link.addEventListener('click', () => {
-    const target = link.dataset.checkRoute;
-    if (Object.hasOwn(questions.route.options, target)) {if (answers[0] !== target) answers[2] = null; answers[0] = target; step = 0; showQuestion(true);}
-  }));
-  showQuestion(false); app.hidden = false; id('check-fallback').hidden = true;
-  }
-  initCheck();
 
   // Preparing a contact draft is local-only. A visitor may open the explicitly
   // displayed mailto link and manually send it in their own email application.
@@ -238,5 +252,8 @@
       status.insertAdjacentElement('afterend', actions);
     });
   }
-  initContact();
+
+  setup('energy illustration', initLens);
+  setup('questionnaire', initCheck);
+  setup('contact form', initContact);
 })();
