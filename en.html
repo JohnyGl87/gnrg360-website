@@ -50,6 +50,7 @@
       "@type": "ProfessionalService",
       "@id": "https://www.gnrg360.com/#business",
       "name": "G-NRG 360",
+      "alternateName": "GNRG360",
       "url": "https://www.gnrg360.com/",
       "description": "Energy consultant and external energy manager for industry, local authorities and private properties: energy consumption analysis, natural gas and engineering project management.",
       "logo": "https://www.gnrg360.com/assets/logo.png",
@@ -74,7 +75,43 @@
         "Natural gas and infrastructure",
         "Project management and supervision",
         "Professional training"
-      ]
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://www.gnrg360.com/en/energy-manager#service"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://www.gnrg360.com/en/natural-gas#service"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://www.gnrg360.com/en/project-management#service"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://www.gnrg360.com/home-energy-audit#service"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@id": "https://www.gnrg360.com/lectures#service"
+            }
+          }
+        ]
+      }
     },
     {
       "@type": "Person",
@@ -82,10 +119,50 @@
       "name": "Evgeni Glozman",
       "alternateName": "יבגני גלוזמן",
       "jobTitle": "Mechanical engineer and certified energy manager",
+      "description": "Mechanical engineer (B.Sc., Technion) with an MBA; certified energy manager (Ministry of Energy) and DVGW-certified (German professional certification). Certified Ministry of Labor examiner for the Natural Gas Facility Operator, Level 1 practical examinations, and approved lecturer in the Ministry of Energy's Energy Manager course at Mishlav College. Former plant management at ICL and project management on behalf of PCI at Intel. Founder of G-NRG 360.",
       "alumniOf": {
         "@type": "CollegeOrUniversity",
         "name": "Technion – Israel Institute of Technology"
       },
+      "hasCredential": [
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "B.Sc. in Mechanical Engineering",
+          "credentialCategory": "degree",
+          "recognizedBy": {
+            "@type": "CollegeOrUniversity",
+            "name": "Technion – Israel Institute of Technology"
+          }
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "Master of Business Administration (MBA)",
+          "credentialCategory": "degree"
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "Certified energy manager",
+          "credentialCategory": "certification",
+          "recognizedBy": {
+            "@type": "GovernmentOrganization",
+            "name": "Israel Ministry of Energy"
+          }
+        },
+        {
+          "@type": "EducationalOccupationalCredential",
+          "name": "DVGW certification (German professional certification)",
+          "credentialCategory": "certification"
+        }
+      ],
+      "knowsAbout": [
+        "Energy management and efficiency",
+        "Energy consumption analysis",
+        "External energy manager",
+        "ISO 50001",
+        "Natural gas and infrastructure",
+        "Project management and supervision",
+        "Professional training"
+      ],
       "sameAs": [
         "https://www.linkedin.com/in/evgl"
       ],
